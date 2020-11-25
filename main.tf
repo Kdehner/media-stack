@@ -26,32 +26,32 @@ resource "docker_image" "lidarr" {
   name         = "ghcr.io/linuxserver/lidarr"
   keep_locally = "true"
 }
-#resource "docker_image" "nginx" {
-#  name         = "ghcr.io/linuxserver/nginx"
-#  keep_locally = "true"
-#}
+resource "docker_image" "nginx" {
+  name         = "ghcr.io/linuxserver/nginx"
+  keep_locally = "true"
+}
 
 resource "docker_network" "media" {
   name = "media"
 }
 
-#resource "docker_container" "nginx" {
-#  image = docker_image.nginx.latest
-#  name  = "nginx"
-#  env   = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
-#  networks_advanced {
-#    name = docker_network.media.name
-#  }
-#  volumes {
-#    container_path = "/config"
-#    volume_name    = docker_volume.nginx.name
-#  }
-#  ports {
-#    internal = 80
-#    external = 80
-#  }
-#  restart = "unless-stopped"
-#}
+resource "docker_container" "nginx" {
+  image = docker_image.nginx.latest
+  name  = "nginx"
+  env   = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  networks_advanced {
+    name = docker_network.media.name
+  }
+  volumes {
+    container_path = "/config"
+    volume_name    = docker_volume.nginx.name
+  }
+  ports {
+    internal = 80
+    external = 80
+  }
+  restart = "unless-stopped"
+}
 
 resource "docker_container" "sabnzbd" {
   image = docker_image.sabnzbd.latest
@@ -330,12 +330,12 @@ resource "docker_volume" "lidarr" {
   }
 }
 
-#resource "docker_volume" "nginx" {
-#  name   = "nginx_config"
-#  driver = "local"
-#  driver_opts = {
-#    type   = "none"
-#    device = "/mnt/bulk2/config/nginx"
-#    o      = "bind"
-#  }
-#}
+resource "docker_volume" "nginx" {
+  name   = "nginx_config"
+  driver = "local"
+  driver_opts = {
+    type   = "none"
+    device = "/mnt/bulk2/config/nginx"
+    o      = "bind"
+  }
+}
