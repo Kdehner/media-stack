@@ -53,7 +53,7 @@ resource "docker_container" "nginx" {
   provider = docker.media
   image = docker_image.nginx.latest
   name  = "nginx"
-  env   = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  env   = ["PUID=1000", "PGID=1000", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -72,7 +72,7 @@ resource "docker_container" "sabnzbd" {
   provider = docker.media
   image    = docker_image.sabnzbd.latest
   name     = "sabnzbd"
-  env      = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  env      = ["PUID=1000", "PGID=1000", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -95,7 +95,7 @@ resource "docker_container" "sonarr" {
   provider = docker.media
   image    = docker_image.sonarr.latest
   name     = "sonarr"
-  env      = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  env      = ["PUID=1000", "PGID=1000", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -122,7 +122,7 @@ resource "docker_container" "radarr" {
   provider = docker.media
   image    = docker_image.radarr.latest
   name     = "radarr"
-  env      = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  env      = ["PUID=1000", "PGID=1000", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -149,7 +149,7 @@ resource "docker_container" "lidarr" {
   provider = docker.media
   image    = docker_image.lidarr.latest
   name     = "lidarr"
-  env      = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  env      = ["PUID=1000", "PGID=1000", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -176,7 +176,7 @@ resource "docker_container" "radarr4k" {
   provider = docker.media
   image    = docker_image.radarr.latest
   name     = "radarr4k"
-  env      = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  env      = ["PUID=1000", "PGID=1000", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -203,7 +203,7 @@ resource "docker_container" "plex" {
   provider     = docker.rpi
   image        = docker_image.plex.latest
   name         = "plex"
-  env          = ["PUID=1000", "PGID=1001", "TZ=America/Denver", "VERSION=docker"]
+  env          = ["PUID=1000", "PGID=1000", "TZ=America/Denver", "VERSION=docker"]
   network_mode = "host"
   volumes {
     container_path = "/media"
