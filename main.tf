@@ -9,35 +9,43 @@ provider "docker" {
 }
 
 resource "docker_image" "sabnzbd" {
+  provider = docker.media
   name         = "ghcr.io/linuxserver/sabnzbd"
   keep_locally = "true"
 }
 resource "docker_image" "sonarr" {
+  provider = docker.media
   name         = "ghcr.io/linuxserver/sonarr"
   keep_locally = "true"
 }
 resource "docker_image" "plex" {
+  provider = docker.rpi
   name         = "ghcr.io/linuxserver/plex"
   keep_locally = "true"
 }
 resource "docker_image" "radarr" {
+  provider = docker.media
   name         = "ghcr.io/linuxserver/radarr"
   keep_locally = "true"
 }
 resource "docker_image" "radarr_sync" {
+  provider = docker.media
   name         = "kdehner/radarrsync"
   keep_locally = "true"
 }
 resource "docker_image" "lidarr" {
+  provider = docker.media
   name         = "ghcr.io/linuxserver/lidarr"
   keep_locally = "true"
 }
 resource "docker_image" "nginx" {
+  provider = docker.media
   name         = "ghcr.io/linuxserver/nginx"
   keep_locally = "true"
 }
 
 resource "docker_network" "media" {
+  provider = docker.media
   name = "media"
 }
 
@@ -234,6 +242,7 @@ resource "docker_container" "radarr_sync" {
 }
 
 resource "docker_volume" "downloads" {
+  provider = docker.media
   name   = "downloads"
   driver = "local"
   driver_opts = {
@@ -244,6 +253,7 @@ resource "docker_volume" "downloads" {
 }
 
 resource "docker_volume" "tvshows" {
+  provider = docker.media
   name   = "tvshows"
   driver = "local"
   driver_opts = {
@@ -254,6 +264,7 @@ resource "docker_volume" "tvshows" {
 }
 
 resource "docker_volume" "movies" {
+  provider = docker.media
   name   = "movies"
   driver = "local"
   driver_opts = {
@@ -264,6 +275,7 @@ resource "docker_volume" "movies" {
 }
 
 resource "docker_volume" "movies4k" {
+  provider = docker.media
   name   = "movies4k"
   driver = "local"
   driver_opts = {
@@ -274,6 +286,7 @@ resource "docker_volume" "movies4k" {
 }
 
 resource "docker_volume" "music" {
+  provider = docker.media
   name   = "music"
   driver = "local"
   driver_opts = {
@@ -284,6 +297,7 @@ resource "docker_volume" "music" {
 }
 
 resource "docker_volume" "sabnzbd" {
+  provider = docker.media
   name   = "sabnzbd_config"
   driver = "local"
   driver_opts = {
@@ -294,6 +308,7 @@ resource "docker_volume" "sabnzbd" {
 }
 
 resource "docker_volume" "plex" {
+  provider = docker.rpi
   name   = "plex_config"
   driver = "local"
   driver_opts = {
@@ -304,6 +319,7 @@ resource "docker_volume" "plex" {
 }
 
 resource "docker_volume" "sonarr" {
+  provider = docker.media
   name   = "sonarr_config"
   driver = "local"
   driver_opts = {
@@ -314,6 +330,7 @@ resource "docker_volume" "sonarr" {
 }
 
 resource "docker_volume" "radarr" {
+  provider = docker.media
   name   = "radarr_config"
   driver = "local"
   driver_opts = {
@@ -324,6 +341,7 @@ resource "docker_volume" "radarr" {
 }
 
 resource "docker_volume" "radarr4k" {
+  provider = docker.media
   name   = "radarr4k_config"
   driver = "local"
   driver_opts = {
@@ -334,6 +352,7 @@ resource "docker_volume" "radarr4k" {
 }
 
 resource "docker_volume" "lidarr" {
+  provider = docker.media
   name   = "lidarr_config"
   driver = "local"
   driver_opts = {
@@ -344,6 +363,7 @@ resource "docker_volume" "lidarr" {
 }
 
 resource "docker_volume" "nginx" {
+  provider = docker.media
   name   = "nginx_config"
   driver = "local"
   driver_opts = {
