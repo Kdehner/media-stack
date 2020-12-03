@@ -1,5 +1,11 @@
 provider "docker" {
-  host = "ssh://rpi"
+  alias = rpi
+  host  = "ssh://rpi"
+}
+
+provider "docker" {
+  alias = media
+  host  = "ssh://media"
 }
 
 resource "docker_image" "sabnzbd" {
@@ -54,9 +60,10 @@ resource "docker_container" "nginx" {
 }
 
 resource "docker_container" "sabnzbd" {
-  image = docker_image.sabnzbd.latest
-  name  = "sabnzbd"
-  env   = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  provider = docker.media
+  image    = docker_image.sabnzbd.latest
+  name     = "sabnzbd"
+  env      = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -76,9 +83,10 @@ resource "docker_container" "sabnzbd" {
 }
 
 resource "docker_container" "sonarr" {
-  image = docker_image.sonarr.latest
-  name  = "sonarr"
-  env   = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  provider = docker.media
+  image    = docker_image.sonarr.latest
+  name     = "sonarr"
+  env      = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -102,9 +110,10 @@ resource "docker_container" "sonarr" {
 }
 
 resource "docker_container" "radarr" {
-  image = docker_image.radarr.latest
-  name  = "radarr"
-  env   = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  provider = docker.media
+  image    = docker_image.radarr.latest
+  name     = "radarr"
+  env      = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -128,9 +137,10 @@ resource "docker_container" "radarr" {
 }
 
 resource "docker_container" "lidarr" {
-  image = docker_image.lidarr.latest
-  name  = "lidarr"
-  env   = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  provider = docker.media
+  image    = docker_image.lidarr.latest
+  name     = "lidarr"
+  env      = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -154,9 +164,10 @@ resource "docker_container" "lidarr" {
 }
 
 resource "docker_container" "radarr4k" {
-  image = docker_image.radarr.latest
-  name  = "radarr4k"
-  env   = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
+  provider = docker.media
+  image    = docker_image.radarr.latest
+  name     = "radarr4k"
+  env      = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -180,6 +191,7 @@ resource "docker_container" "radarr4k" {
 }
 
 resource "docker_container" "plex" {
+  provider     = docker.rpi
   image        = docker_image.plex.latest
   name         = "plex"
   env          = ["PUID=1000", "PGID=1001", "TZ=America/Denver", "VERSION=docker"]
@@ -208,8 +220,9 @@ resource "docker_container" "plex" {
 }
 
 resource "docker_container" "radarr_sync" {
-  image = docker_image.radarr_sync.latest
-  name  = "radarr_sync"
+  provider = docker.media
+  image    = docker_image.radarr_sync.latest
+  name     = "radarr_sync"
   env = ["SOURCE_RADARR_URL=http://radarr:7878", "SOURCE_RADARR_KEY=cfc79343909349d4a7bd72f934b5e7a5",
     "SOURCE_RADARR_PATH=/movies", "TARGET_RADARR_PATH=/movies",
     "TARGET_RADARR_URL=http://radarr4k:7878", "TARGET_RADARR_KEY=86d72158f1904420be828a1c64460e64",
