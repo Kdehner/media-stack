@@ -205,20 +205,9 @@ resource "docker_container" "plex" {
   env          = ["PUID=1000", "PGID=1001", "TZ=America/Denver", "VERSION=docker"]
   network_mode = "host"
   volumes {
-    container_path = "/movies"
-    volume_name    = docker_volume.movies.name
-  }
-  volumes {
-    container_path = "/tv"
-    volume_name    = docker_volume.tvshows.name
-  }
-  volumes {
-    container_path = "/movies4k"
-    volume_name    = docker_volume.movies4k.name
-  }
-  volumes {
-    container_path = "/music"
-    volume_name    = docker_volume.music.name
+    container_path = "/media"
+    volume_name    = docker_volume.media.name
+    read_only = "true"
   }
   volumes {
     container_path = "/config"
