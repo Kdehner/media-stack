@@ -225,7 +225,7 @@ resource "docker_volume" "downloads" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk1/media/downloads"
+    device = "${var.downloads}/downloads"
     o      = "bind"
   }
 }
@@ -235,7 +235,7 @@ resource "docker_volume" "tvshows" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk1/media/tvshows"
+    device = "${var.media}/tvshows"
     o      = "bind"
   }
 }
@@ -245,7 +245,7 @@ resource "docker_volume" "movies" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk1/media/movies"
+    device = "${var.media}/movies"
     o      = "bind"
   }
 }
@@ -255,7 +255,7 @@ resource "docker_volume" "movies4k" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk1/media/movies4k"
+    device = "${var.media}/movies4k"
     o      = "bind"
   }
 }
@@ -265,7 +265,7 @@ resource "docker_volume" "music" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk1/media/music"
+    device = "${var.media}/music"
     o      = "bind"
   }
 }
@@ -275,7 +275,7 @@ resource "docker_volume" "sabnzbd" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk2/config/sabnzbd"
+    device = "${var.config}/sabnzbd"
     o      = "bind"
   }
 }
@@ -285,7 +285,7 @@ resource "docker_volume" "plex" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk2/config/plex"
+    device = "/mnt/raid-alpha/config/plex"
     o      = "bind"
   }
 }
@@ -295,7 +295,7 @@ resource "docker_volume" "sonarr" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk2/config/sonarr"
+    device = "${var.config}/sonarr"
     o      = "bind"
   }
 }
@@ -305,7 +305,7 @@ resource "docker_volume" "radarr" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk2/config/radarr"
+    device = "${var.config}/radarr"
     o      = "bind"
   }
 }
@@ -315,7 +315,7 @@ resource "docker_volume" "radarr4k" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk2/config/radarr4k"
+    device = "${var.config}/radarr4k"
     o      = "bind"
   }
 }
@@ -325,7 +325,7 @@ resource "docker_volume" "lidarr" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk2/config/lidarr"
+    device = "${var.config}/lidarr"
     o      = "bind"
   }
 }
@@ -335,7 +335,7 @@ resource "docker_volume" "nginx" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "/mnt/bulk2/config/nginx"
+    device = "${var.config}/nginx"
     o      = "bind"
   }
 }
