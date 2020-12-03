@@ -1,10 +1,10 @@
 provider "docker" {
-  alias = rpi
+  alias = "rpi"
   host  = "ssh://rpi"
 }
 
 provider "docker" {
-  alias = media
+  alias = "media"
   host  = "ssh://media"
 }
 
