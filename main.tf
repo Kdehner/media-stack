@@ -236,7 +236,7 @@ resource "docker_volume" "downloads" {
   driver = "local"
   driver_opts = {
     type   = "none"
-    device = "${var.downloads}/downloads"
+    device = "${var.downloads}"
     o      = "bind"
   }
 }
