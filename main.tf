@@ -318,6 +318,17 @@ resource "docker_volume" "plex" {
   }
 }
 
+resource "docker_volume" "media" {
+  provider = docker.rpi
+  name   = "media"
+  driver = "local"
+  driver_opts = {
+    type   = "none"
+    device = "/mnt/raid-alpha/media"
+    o      = "bind"
+  }
+}
+
 resource "docker_volume" "sonarr" {
   provider = docker.media
   name   = "sonarr_config"
