@@ -50,6 +50,7 @@ resource "docker_network" "media" {
 }
 
 resource "docker_container" "nginx" {
+  provider = docker.media
   image = docker_image.nginx.latest
   name  = "nginx"
   env   = ["PUID=1000", "PGID=1001", "TZ=America/Denver"]
