@@ -9,51 +9,56 @@ provider "docker" {
 }
 
 resource "docker_image" "sabnzbd" {
-  provider = docker.media
+  provider     = docker.media
   name         = "ghcr.io/linuxserver/sabnzbd"
   keep_locally = "true"
 }
 resource "docker_image" "sonarr" {
-  provider = docker.media
+  provider     = docker.media
   name         = "ghcr.io/linuxserver/sonarr"
   keep_locally = "true"
 }
 resource "docker_image" "plex" {
-  provider = docker.rpi
+  provider     = docker.rpi
   name         = "ghcr.io/linuxserver/plex"
   keep_locally = "true"
 }
 resource "docker_image" "radarr" {
-  provider = docker.media
+  provider     = docker.media
   name         = "ghcr.io/linuxserver/radarr"
   keep_locally = "true"
 }
 resource "docker_image" "radarr_sync" {
-  provider = docker.media
-  name         = "kdehner/radarrsync"
+  provider     = docker.media
+  name         = "funkypenguin/radarrsync"
   keep_locally = "true"
 }
 resource "docker_image" "lidarr" {
-  provider = docker.media
+  provider     = docker.media
   name         = "ghcr.io/linuxserver/lidarr"
   keep_locally = "true"
 }
 resource "docker_image" "nginx" {
-  provider = docker.media
+  provider     = docker.media
   name         = "ghcr.io/linuxserver/nginx"
+  keep_locally = "true"
+}
+resource "docker_image" "telegraf" {
+  provider     = docker.media
+  name         = "telegraf"
   keep_locally = "true"
 }
 
 resource "docker_network" "media" {
   provider = docker.media
-  name = "media"
+  name     = "media"
 }
 
 resource "docker_container" "nginx" {
   provider = docker.media
-  image = docker_image.nginx.latest
-  name  = "nginx"
-  env   = ["PUID=1000", "PGID=1000", "TZ=America/Denver"]
+  image    = docker_image.nginx.latest
+  name     = "nginx"
+  env      = ["PUID=1000", "PGID=1000", "TZ=America/Denver"]
   networks_advanced {
     name = docker_network.media.name
   }
@@ -86,7 +91,7 @@ resource "docker_container" "sabnzbd" {
   }
   ports {
     internal = 8080
-    external = 9001
+    external = 8001
   }
   restart = "unless-stopped"
 }
@@ -113,7 +118,7 @@ resource "docker_container" "sonarr" {
   }
   ports {
     internal = 8989
-    external = 9002
+    external = 8002
   }
   restart = "unless-stopped"
 }
@@ -140,7 +145,7 @@ resource "docker_container" "radarr" {
   }
   ports {
     internal = 7878
-    external = 9003
+    external = 8003
   }
   restart = "unless-stopped"
 }
@@ -167,7 +172,7 @@ resource "docker_container" "lidarr" {
   }
   ports {
     internal = 8686
-    external = 9005
+    external = 8005
   }
   restart = "unless-stopped"
 }
@@ -194,7 +199,7 @@ resource "docker_container" "radarr4k" {
   }
   ports {
     internal = 7878
-    external = 9004
+    external = 8004
   }
   restart = "unless-stopped"
 }
@@ -208,7 +213,7 @@ resource "docker_container" "plex" {
   volumes {
     container_path = "/media"
     volume_name    = docker_volume.media.name
-    read_only = "true"
+    read_only      = "true"
   }
   volumes {
     container_path = "/config"
@@ -221,20 +226,45 @@ resource "docker_container" "radarr_sync" {
   provider = docker.media
   image    = docker_image.radarr_sync.latest
   name     = "radarr_sync"
-  env = ["SOURCE_RADARR_URL=http://radarr:7878", "SOURCE_RADARR_KEY=cfc79343909349d4a7bd72f934b5e7a5",
+  env = ["SOURCE_RADARR_URL=http://radarr:7878", "SOURCE_RADARR_KEY=7b5cb38d2dcc4664ac885756430d3a1e",
     "SOURCE_RADARR_PATH=/movies", "TARGET_RADARR_PATH=/movies",
-    "TARGET_RADARR_URL=http://radarr4k:7878", "TARGET_RADARR_KEY=86d72158f1904420be828a1c64460e64",
-  "SOURCE_RADARR_PROFILE_NUM=8", "TARGET_RADARR_PROFILE_NUM=5", "DELAY=1m"]
+    "TARGET_RADARR_URL=http://radarr4k:7878", "TARGET_RADARR_KEY=3227a58b17a3472e9f0c9afa60835fcb",
+  "SOURCE_RADARR_PROFILE_NUM=5", "TARGET_RADARR_PROFILE_NUM=5", "DELAY=1m"]
   networks_advanced {
     name = docker_network.media.name
   }
   restart = "unless-stopped"
 }
 
+resource "docker_container" "telegraf" {
+  provider = docker.media
+  image    = docker_image.telegraf.latest
+  name     = "telegraf"
+  hostname = "kevbot-media"
+  env = ["PUID=1000", "PGID=1001", "TZ=America/Denver",
+    "HOST_ETC=/hostfs/etc",
+    "HOST_PROC=/hostfs/proc",
+    "HOST_SYS=/hostfs/sys",
+    "HOST_VAR=/hostfs/var",
+    "HOST_RUN=/hostfs/run",
+  "HOST_MOUNT_PREFIX=/hostfs"]
+  volumes {
+    container_path = "/etc/telegraf/telegraf.conf"
+    read_only      = "true"
+    host_path      = "/mnt/nas/config/telegraf/telegraf.conf"
+  }
+  volumes {
+    container_path = "/hostfs"
+    read_only      = "true"
+    host_path      = "/"
+  }
+  restart = "unless-stopped"
+}
+
 resource "docker_volume" "downloads" {
   provider = docker.media
-  name   = "downloads"
-  driver = "local"
+  name     = "downloads"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = var.downloads
@@ -244,8 +274,8 @@ resource "docker_volume" "downloads" {
 
 resource "docker_volume" "tvshows" {
   provider = docker.media
-  name   = "tvshows"
-  driver = "local"
+  name     = "tvshows"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "${var.media}/tvshows"
@@ -255,8 +285,8 @@ resource "docker_volume" "tvshows" {
 
 resource "docker_volume" "movies" {
   provider = docker.media
-  name   = "movies"
-  driver = "local"
+  name     = "movies"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "${var.media}/movies"
@@ -266,8 +296,8 @@ resource "docker_volume" "movies" {
 
 resource "docker_volume" "movies4k" {
   provider = docker.media
-  name   = "movies4k"
-  driver = "local"
+  name     = "movies4k"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "${var.media}/movies4k"
@@ -277,8 +307,8 @@ resource "docker_volume" "movies4k" {
 
 resource "docker_volume" "music" {
   provider = docker.media
-  name   = "music"
-  driver = "local"
+  name     = "music"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "${var.media}/music"
@@ -288,8 +318,8 @@ resource "docker_volume" "music" {
 
 resource "docker_volume" "sabnzbd" {
   provider = docker.media
-  name   = "sabnzbd_config"
-  driver = "local"
+  name     = "sabnzbd_config"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "${var.config}/sabnzbd"
@@ -299,8 +329,8 @@ resource "docker_volume" "sabnzbd" {
 
 resource "docker_volume" "plex" {
   provider = docker.rpi
-  name   = "plex_config"
-  driver = "local"
+  name     = "plex_config"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "/mnt/raid-alpha/config/plex"
@@ -310,8 +340,8 @@ resource "docker_volume" "plex" {
 
 resource "docker_volume" "media" {
   provider = docker.rpi
-  name   = "media"
-  driver = "local"
+  name     = "media"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "/mnt/raid-alpha/media"
@@ -321,8 +351,8 @@ resource "docker_volume" "media" {
 
 resource "docker_volume" "sonarr" {
   provider = docker.media
-  name   = "sonarr_config"
-  driver = "local"
+  name     = "sonarr_config"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "${var.config}/sonarr"
@@ -332,8 +362,8 @@ resource "docker_volume" "sonarr" {
 
 resource "docker_volume" "radarr" {
   provider = docker.media
-  name   = "radarr_config"
-  driver = "local"
+  name     = "radarr_config"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "${var.config}/radarr"
@@ -343,8 +373,8 @@ resource "docker_volume" "radarr" {
 
 resource "docker_volume" "radarr4k" {
   provider = docker.media
-  name   = "radarr4k_config"
-  driver = "local"
+  name     = "radarr4k_config"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "${var.config}/radarr4k"
@@ -354,8 +384,8 @@ resource "docker_volume" "radarr4k" {
 
 resource "docker_volume" "lidarr" {
   provider = docker.media
-  name   = "lidarr_config"
-  driver = "local"
+  name     = "lidarr_config"
+  driver   = "local"
   driver_opts = {
     type   = "none"
     device = "${var.config}/lidarr"
@@ -365,11 +395,11 @@ resource "docker_volume" "lidarr" {
 
 resource "docker_volume" "nginx" {
   provider = docker.media
-  name   = "nginx_config"
-  driver = "local"
+  name     = "nginx_config"
+  driver   = "local"
   driver_opts = {
     type   = "none"
-    device = "${var.config}/nginx"
+    device = "/mnt/nas/config/nginx"
     o      = "bind"
   }
 }

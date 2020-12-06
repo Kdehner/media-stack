@@ -1,5 +1,5 @@
 variable "config" {
-  default = "/mnt/nas/config"
+  default = "/home/kevbot/config"
 }
 variable "downloads" {
   default = "/mnt/nas/downloads"
